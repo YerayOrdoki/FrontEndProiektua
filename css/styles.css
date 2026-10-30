@@ -1,0 +1,130 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#goiburua {
+  padding: 16px;
+  border-bottom: 1px solid #ccc;
+}
+
+#goiburua h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+#biltegi-nagusia {
+  flex: 1;
+  display: flex;
+}
+
+#menu-nagusia {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 200px;
+  flex-shrink: 0;
+  padding: 16px;
+  border-right: 1px solid #ccc;
+}
+
+#menu-nagusia button {
+  padding: 8px;
+  text-align: left;
+}
+
+#menu-nagusia button.active {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+main {
+  flex: 1;
+  padding: 16px;
+}
+
+#oina {
+  padding: 12px 16px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+}
+
+#oina p {
+  margin: 0;
+}
+
+.atala {
+  display: none;
+}
+
+.atala.aktiboa {
+  display: block;
+}
+
+.item-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.item-card img {
+  max-width: 100%;
+  height: auto;
+}
+
+.item-card.hautatua {
+  outline: 2px solid #00a870;
+}
+
+.bilatzaile-edukia,
+.bilduma-edukiak {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+#bilaketa,
+#bilduma-kontrolak,
+#ekintzak-kudeatu{
+  margin-bottom: 24px;
+}
+
+#egoera-bilatzen:empty,
+#bilduma-kontrolak:empty {
+  display: none;
+}
+
+.panel {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.panel h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 800px) {
+  #biltegi-nagusia {
+    flex-direction: column;
+  }
+
+  #menu-nagusia {
+    width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .bilatzaile-edukia,
+  .bilduma-edukiak {
+    grid-template-columns: 1fr;
+  }
+}
