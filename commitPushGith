@@ -1,0 +1,26 @@
+
+//iniciar la carpeta
+git clone https://github.com/USUARIO/REPOSITORIO.git
+//bajarte lo que hay
+git pull
+
+//hacer un commit
+git add .
+git commit -m "descripcion del commit"
+hacer un push
+git push
+
+
+
+git init
+git add .
+git commit -m "Nombre Del commmit"
+git branch -M main
+
+git remote add origin https://github.com/USUARIO/REPOSITORIO.git
+git push -u origin main
+
+
+ git config --global user.email "you@example.com"
+ git config --global user.name "Tu Nombre"
+
