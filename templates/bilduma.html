@@ -1,4 +1,4 @@
-<h2>Nire Bilduma</h2>
+<!--<h2>Nire Bilduma</h2>
 
 <div id="bilduma-kontrolak" class="panel"></div>
 
@@ -20,8 +20,105 @@
 
 <div>
     <label>Iragazi generoz:</label>
-    <input type="text" id="input-filtro" placeholder="Adibidez: Shooter">
+    <input type="text" id="input-filtroa" placeholder="Adibidez: Shooter">
     <button id="btn-iragazi">Iragazi (Filtrar)</button>
   </div>
 
 </div>
+-->
+<h2>Nire Bilduma</h2>
+
+<script>
+  function bildumaKargatuEtaErakutsi() {
+    let bildumaOsoa = bildumaStorage.itemBezalaLortu();
+
+    //.filter()
+    const iragazkiTestua = document.getElementById('input-filtroa').value.toLowerCase();
+    if (iragazkiTestua) {
+      bildumaOsoa = bildumaOsoa.filter(item => item.generoa.toLowerCase() === iragazkiTestua);    
+    } 
+    //.sort()
+    const ordenazioa = document.getElementById('select-ordena').value;
+    bildumaOsoa.sort((a, b) => {
+      if (ordenazioa === 'balorazioa-desc') {
+        return (b.balorazioa || 0) - (a.balorazioa || 0);
+      }
+      if (ordenazioa === 'balorazioa-asc') {
+        return (a.balorazioa || 0) - (b.balorazioa || 0);
+      }
+    });
+
+    //.map()
+    const edukiontzia = document.getElementById('lista-bilduma');
+    if (bildumaOsoa.length === 0) {
+      edukiontzia.innerHTML = '<p>Ez dago emaitzarik.</p>';
+    } else {
+      //join erabili dugu webean , ez ikusteko
+      edukiontzia.innerHTML = bildumaOsoa.map(item => item.toHTML()).join('');
+      
+      //joku bakoitzaren txartela lortzen dugu
+      const txartelak = edukiontzia.querySelectorAll('.item-card');
+      txartelak.forEach((txartela, indizea) => {
+        txartela.addEventListener('click', () => xehetasunakErakutsi(bildumaOsoa[indizea]));
+      });
+    }
+  }
+
+  function xehetasunakErakutsi(item) {
+    const panela = document.getElementById('xehetasun-bilduma');
+    panela.innerHTML = item.toXehetasunHTML();
+    
+    //"Gehitu bildumara" botoia ezkutatu bilduman badago
+    const botoia = panela.querySelector('#gehitu-bildumara');
+    if (botoia){
+      botoia.style.display = 'none';
+    } 
+  }
+
+  function gertaerakKudeatu() {
+    document.getElementById('btn-iragazi').addEventListener('click', bildumaKargatuEtaErakutsi);
+    document.getElementById('btn-ordenatu').addEventListener('click', bildumaKargatuEtaErakutsi);
+    
+    bildumaKargatuEtaErakutsi();
+  }
+
+  window.onload = gertaerakKudeatu;
+</script>
+
+<div id="bilduma-kontrolak" class="panel kontrolak-flex">
+  <!-- Iragazi -->
+  <div>
+    <label for="input-filtroa">Iragazi generoz:</label>
+    <input type="text" id="input-filtroa" placeholder="Adibidez: Shooter">
+    <button id="btn-iragazi">Iragazi</button>
+  </div>
+  
+  <!-- Ordenatu -->
+  <div>
+    <label for="select-ordena">Ordenatu:</label>
+    <select id="select-ordena">
+      <option value="balorazioa-desc">Balorazioa (Handienetik txikienera)</option>
+      <option value="balorazioa-asc">Balorazioa (Txikienetik handienera)</option>
+    </select>
+    <button id="btn-ordenatu">Ordenatu</button>
+  </div>
+</div>
+
+<div class="bilduma-edukiak">
+
+  <section id="items-bilduma" class="panel">
+    <h3>Gordetako Item-ak</h3>
+    <div id="lista-bilduma" class="lista-grid">
+      <p>Oraindik ez duzu item-ik gorde.</p>
+    </div>
+  </section>
+
+  <div id="panel-bilduma" class="panel">
+    <h3>Item hautatua</h3>
+    <div id="xehetasun-bilduma">
+      <p>Item bat aukeratu bere xehetasunak bistaratzeko.</p>
+    </div>
+  </div>
+
+</div>
+

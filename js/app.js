@@ -59,7 +59,7 @@ function hasieratuBilatzailea() {
 
   emaitzak.addEventListener('click', function (event) {
     const txartela = event.target.closest('.item-card');
-
+    
     if (!txartela) {
       return;
     }
@@ -73,6 +73,45 @@ function hasieratuBilatzailea() {
     }
 
     xehetasunak.innerHTML = hautatutakoItema.toXehetasunHTML();
+    const gordeBotoia=document.getElementById('gehitu-bildumara');
+
+    gordeBotoia.addEventListener('click', function () {
+      const balorazioa=Number(document.getElementById('item-balorazioa').value);
+
+      const iruzkina=document.getElementById('item-iruzkina').value.trim();
+
+       if (!Number.isInteger(balorazioa) || balorazioa < 1 || balorazioa > 5) {
+        egoera.textContent = 'Balorazioak 1 eta 5 arteko zenbaki osoa izan behar du.';
+        return;
+      }
+      
+      try {
+        const bilduma = bildumaStorage.denakLortu();
+
+        const existitzenDa = bilduma.some(function (item) {
+          return String(item.id) === String(hautatutakoItema.id);
+        });
+
+        if (existitzenDa) {
+          egoera.textContent = 'Joko hau dagoeneko bilduman dago.';
+          return;
+        }
+
+        hautatutakoItema.balorazioa = balorazioa;
+        hautatutakoItema.iruzkina = iruzkina;
+        hautatutakoItema.gordetakoData = new Date().toISOString();
+
+        bildumaStorage.gorde(hautatutakoItema);
+
+        egoera.textContent = 'Jokoa bilduman gorde da.';
+
+      } catch (error) {
+        egoera.textContent = 'Errorea jokoa gordetzean.';
+        console.error(error);
+      }
+
+
+    });
   });
 }
 
