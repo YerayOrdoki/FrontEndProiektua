@@ -1,10 +1,81 @@
 const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
+//
 const HASIERATZAILEAK = {
-  bilatzaile: () => {},
-  bilduma: () => {},
-  kudeatuBilduma: () => {}
+  bilatzaile: hasieratuBilatzailea,
+  bilduma: () => { },
+  kudeatuBilduma: () => { }
 };
+
+function hasieratuBilatzailea() {
+  const bilaketa = document.getElementById('form-bilatzaile');
+  const egoera = document.getElementById('egoera-bilatzen');
+  const emaitzak = document.getElementById('emaitzak-bilaketa');
+  const xehetasunak = document.getElementById('xehetasunak-item');
+
+  let bilaketakoItemak = [];
+
+  bilaketa.onsubmit = async function (event) {
+    event.preventDefault();
+
+    const generoa = document.getElementById('input-bilaketa').value.trim();
+
+    const plataforma = document.getElementById('select-plataforma').value;
+
+    if (!generoa) {
+      egoera.textContent = 'Idatzi bilatu nahi duzun generoa.';
+      return;
+    }
+
+    egoera.textContent = 'Bilatzen...';
+    emaitzak.replaceChildren();
+    bilaketakoItemak = [];
+
+    xehetasunak.textContent ='Emaitzetako bat aukeratu, bere xehetasunak bistaratzeko.';
+
+    try {
+      const jokoak = await bilatuApi(generoa, plataforma);
+
+      bilaketakoItemak = jokoak.map(function (jokoa) {
+        return new Item(jokoa);
+      });
+
+      egoera.textContent =`${bilaketakoItemak.length} joko aurkitu dira.`;
+
+      if (bilaketakoItemak.length === 0) {
+        emaitzak.textContent = 'Ez da emaitzarik aurkitu.';
+        return;
+      }
+
+      emaitzak.innerHTML = bilaketakoItemak
+        .map(function (item) {
+          return item.toHTML();
+        }).join('');
+    } catch (error) {
+      egoera.textContent = 'Errorea bilaketa egitean.';
+      console.error(error);
+    }
+  };
+
+  emaitzak.addEventListener('click', function (event) {
+    const txartela = event.target.closest('.item-card');
+
+    if (!txartela) {
+      return;
+    }
+
+    const hautatutakoItema = bilaketakoItemak.find(function (item) {
+      return String(item.id) === txartela.dataset.id;
+    });
+
+    if (!hautatutakoItema) {
+      return;
+    }
+
+    xehetasunak.innerHTML = hautatutakoItema.toXehetasunHTML();
+  });
+}
+
 
 async function atalaKargatu(izena) {
   const edukiontzia = document.getElementById(`atala-${izena}`);
@@ -24,7 +95,7 @@ async function atalaKargatu(izena) {
 
 function erakutsiAtala(izena) {
   console.log('Erakutsi atala:', izena);
- document.querySelectorAll('.atala').forEach(sec => {
+  document.querySelectorAll('.atala').forEach(sec => {
     sec.classList.remove('aktiboa');
   });
 
@@ -52,12 +123,12 @@ function erakutsiAtala(izena) {
 }
 
 
-  /*document.querySelectorAll('.atala').forEach(sec => sec.classList.remove('aktiboa'));
-  document.getElementById(`atala-${izena}`).classList.add('aktiboa');
+/*document.querySelectorAll('.atala').forEach(sec => sec.classList.remove('aktiboa'));
+document.getElementById(`atala-${izena}`).classList.add('aktiboa');
 
-  document.querySelectorAll('#menu-nagusia button').forEach(btn => btn.classList.remove('active'));
-  const boton = document.querySelector(`#menu-nagusia button[data-seccion="${izena}"]`);
-  if (boton) boton.classList.add('active');
+document.querySelectorAll('#menu-nagusia button').forEach(btn => btn.classList.remove('active'));
+const boton = document.querySelector(`#menu-nagusia button[data-seccion="${izena}"]`);
+if (boton) boton.classList.add('active');
 }*/
 
 async function jaurtiApp() {
