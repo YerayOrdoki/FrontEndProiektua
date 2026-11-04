@@ -43,7 +43,21 @@ class bildumaStorage {
     localStorage.setItem(BILDUMA_GAKOA, JSON.stringify(dataAldatua));
   }
 
+  //3.puntuan eskatuta
+  static eguneratu(item) {
+    const bilduma = this.denakLortu();
+    const index = bilduma.findIndex(e => String(e.id) === String(item.id));
+
+    if (index === -1){ 
+      return false
+    };
+
+    bilduma[index] = item.toStorageObject();
+    localStorage.setItem(BILDUMA_GAKOA, JSON.stringify(bilduma));
+    return true;
+  }
+
   static hustu() {
-    localStorage.clear();
+    localStorage.removeItem(BILDUMA_GAKOA);
   }
 }

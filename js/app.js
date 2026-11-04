@@ -1,9 +1,9 @@
 const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 
-//
+//imanol deja de cantar que cantass fatal porfa
 const HASIERATZAILEAK = {
   bilatzaile: hasieratuBilatzailea,
-  bilduma: () => { },
+  bilduma: () => hasieratuBilduma,
   kudeatuBilduma: () => { }
 };
 
@@ -108,11 +108,75 @@ function hasieratuBilatzailea() {
       } catch (error) {
         egoera.textContent = 'Errorea jokoa gordetzean.';
         console.error(error);
+      } finally{
+        document.getElementById('item-balorazioa').value = '';
+        document.getElementById('item-iruzkina').value = '';
+        xehetasunak.textContent = 'Emaitzetako bat aukeratu, bere xehetasunak bistaratzeko.';
       }
 
-
+      
     });
   });
+}
+
+//Bildumaren hasierakea 
+
+function hasieratuBilduma() {
+
+  //bilduma.html ko elementuak lortzen ditugu
+  const edukiontzia = document.getElementById('lista-bilduma');
+  const panela = document.getElementById('xehetasun-bilduma');
+  const btnIragazi = document.getElementById('btn-iragazi');
+  const btnOrdenatu = document.getElementById('btn-ordenatu');
+
+  function bildumaKargatuEtaErakutsi() {
+    let bildumaOsoa = bildumaStorage.itemBezalaLortu();
+
+    //.filter
+    const inputFiltro = document.getElementById('input-filtroa');
+    if (inputFiltro) {
+      const iragazkiTestua = inputFiltro.value.toLowerCase().trim();
+      if (iragazkiTestua) {
+        bildumaOsoa = bildumaOsoa.filter(item => item.generoa.toLowerCase() === iragazkiTestua);
+      }
+    }
+
+    // .sort
+    const selectOrden = document.getElementById('select-ordena');
+    if (selectOrden) {
+      const ordenazioa = selectOrden.value;
+      bildumaOsoa.sort((a, b) => {
+        if (ordenazioa === 'balorazioa-desc') return (b.balorazioa || 0) - (a.balorazioa || 0);
+        if (ordenazioa === 'balorazioa-asc') return (a.balorazioa || 0) - (b.balorazioa || 0);
+      });
+    }
+
+    if (bildumaOsoa.length === 0) {
+      edukiontzia.innerHTML = '<p>Ez dago emaitzarik.</p>';
+    } else {
+      //join('') jartzen dugu bestela "," ateratzen delako
+      edukiontzia.innerHTML = bildumaOsoa.map(item => item.toHTML()).join('');
+      
+      const txartelak = edukiontzia.querySelectorAll('.item-card');
+      txartelak.forEach((txartela, indizea) => {
+        txartela.addEventListener('click', () => {
+          //videojokoaren Xehetasunak erakusten ditugu
+          panela.innerHTML = bildumaOsoa[indizea].toXehetasunHTML();
+          
+          // "Gehitu bildumara" botoia ezkudatu jokua bilduman badago
+          const botoia = panela.querySelector('#gehitu-bildumara');
+          if (botoia) botoia.style.display = 'none';
+        });
+      });
+    }
+  }
+
+  // Botoiei gertaerak lotu
+  if (btnIragazi) btnIragazi.addEventListener('click', bildumaKargatuEtaErakutsi);
+  if (btnOrdenatu) btnOrdenatu.addEventListener('click', bildumaKargatuEtaErakutsi);
+
+  // Funtzioa exekutatu atala kargatzean
+  bildumaKargatuEtaErakutsi();
 }
 
 
