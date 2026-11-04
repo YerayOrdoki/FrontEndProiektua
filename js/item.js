@@ -28,7 +28,7 @@ toXehetasunHTML() {
     return `
       <div class="item-details">
         <h2>${this.izena}</h2>
-        <img src="${this.irudia}" alt="${this.izena}" style="width:100%">
+        <img src="${this.irudia}" alt="${this.izena}" class="irudi-xehetasuna">
         <p>Generoa: ${this.generoa}</p>
         <p>Plataforma: ${this.plataforma}</p>
         
@@ -39,6 +39,26 @@ toXehetasunHTML() {
         <textarea id="item-iruzkina">${this.iruzkina}</textarea>
         
         <button id="gehitu-bildumara">Gehitu bildumara</button>
+      </div>
+    `;
+  }
+//gero erabiliko dugu, XehatasunHTML + 2 botoi da
+  toKudeatuHTML() {
+    return `
+      <div class="item-card" data-id="${this.id}">
+        <img src="${this.irudia}" alt="${this.izena}" class="irudi-txikia">
+        <div class="item-info">
+          <h3>${this.izena}</h3>
+          
+          <label>Balorazioa (1-5):</label>
+          <input type="number" class="edit-balorazioa" min="1" max="5" value="${this.balorazioa || ''}">
+          
+          <label>Iruzkina:</label>
+          <input type="text" class="edit-iruzkina" value="${this.iruzkina}">
+          
+          <button class="btn-gorde">Gorde aldaketak</button>
+          <button class="btn-ezabatu">Ezabatu</button>
+        </div>
       </div>
     `;
   }

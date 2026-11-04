@@ -1,10 +1,10 @@
-const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
+const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma','estatistikak'];
 
-//imanol deja de cantar que cantass fatal porfa
 const HASIERATZAILEAK = {
   bilatzaile: hasieratuBilatzailea,
   bilduma: hasieratuBilduma,
-  kudeatuBilduma: () => { }
+  kudeatuBilduma: hasieratuKudeatuBilduma,
+  estatistikak: hasieratuEstatistikak
 };
 
 function hasieratuBilatzailea() {
@@ -163,7 +163,7 @@ function hasieratuBilduma() {
           //videojokoaren Xehetasunak erakusten ditugu
           panela.innerHTML = bildumaOsoa[indizea].toXehetasunHTML();
           
-          // "Gehitu bildumara" botoia ezkudatu jokua bilduman badago
+          //"Gehitu bildumara" botoia ezkudatu jokua bilduman badago
           const botoia = panela.querySelector('#gehitu-bildumara');
           if (botoia) botoia.style.display = 'none';
         });
@@ -171,12 +171,79 @@ function hasieratuBilduma() {
     }
   }
 
-  // Botoiei gertaerak lotu
-  if (btnIragazi) btnIragazi.addEventListener('click', bildumaKargatuEtaErakutsi);
-  if (btnOrdenatu) btnOrdenatu.addEventListener('click', bildumaKargatuEtaErakutsi);
+  //Botoiei gertaerak lotu
+  if (btnIragazi){ 
+    btnIragazi.addEventListener('click', bildumaKargatuEtaErakutsi)
+  };
+  if (btnOrdenatu){ 
+    btnOrdenatu.addEventListener('click', bildumaKargatuEtaErakutsi)
+  };
 
-  // Funtzioa exekutatu atala kargatzean
+  //Funtzioa exekutatu atala kargatzean
   bildumaKargatuEtaErakutsi();
+}
+
+function kudeatuKargatuEtaErakutsi() {
+  const edukiontzia = document.getElementById('lista-kudeatu');
+  
+  if (!edukiontzia) return; //Funtzioa beste atal batean ustekabean exekutatzen bada erroreak saihesteko
+
+  const bildumaOsoa = bildumaStorage.itemBezalaLortu();
+  
+  if (bildumaOsoa.length === 0) {
+    edukiontzia.innerHTML = '<p>Oraindik ez du item-ik gorde.</p>';
+  } else {
+    //to kudeatu funtzio bereizia deitzen dugu botoi guztiak eskuratzeko
+    edukiontzia.innerHTML = bildumaOsoa.map(item => item.toKudeatuHTML()).join('');
+    
+    //Ezabatu botoiak (1 joku bakoitzarrentzako)
+    const ezabatuBotoiak = edukiontzia.querySelectorAll('.btn-ezabatu');
+    ezabatuBotoiak.forEach((botoia, indizea) => {
+      botoia.addEventListener('click', () => {
+        const idAukeratua = bildumaOsoa[indizea].id;
+        if(confirm('Ziur zaude bildumatik bideojokoa kendu nahi duzula?')){
+          bildumaStorage.ezabatu(idAukeratua);
+        }
+        //Zerrenda berria kargatu
+        kudeatuKargatuEtaErakutsi();
+      });
+    });
+
+    //Gorde botoia (1 joku bakoitzarentzat)
+    const gordeBotoiak = edukiontzia.querySelectorAll('.btn-gorde');
+    gordeBotoiak.forEach((botoia, indizea) => {
+      botoia.addEventListener('click', () => {
+        const txartelak = edukiontzia.querySelectorAll('.item-card');
+        const txartela = txartelak[indizea];
+        const balorazioaBerria = txartela.querySelector('.edit-balorazioa').value;
+        const iruzkinaBerria = txartela.querySelector('.edit-iruzkina').value;
+        
+        const jokoa = bildumaOsoa[indizea];
+        jokoa.balorazioa = balorazioaBerria;
+        jokoa.iruzkina = iruzkinaBerria;
+        
+        bildumaStorage.eguneratu(jokoa);
+        alert('Aldaketak gorde dira!');
+      });
+    });
+  }
+}
+
+//Hasieratu
+function hasieratuKudeatuBilduma() {
+  const hustuBotoia = document.getElementById('botoia-hustu');
+
+  //Bilduma osoa husteko botoiaren gertaera
+  if (hustuBotoia) {
+    hustuBotoia.onclick = function() {
+      if (confirm('Ziur zaude bilduma osoa ezabatu nahi duzula?')) {
+        bildumaStorage.hustu();
+        kudeatuKargatuEtaErakutsi(); //Zerrenda hutsa erakusteko berriro kargatu
+      }
+    };
+  }
+  //Funtzio independentea deitu zerrenda marrazteko
+  kudeatuKargatuEtaErakutsi();
 }
 
 
