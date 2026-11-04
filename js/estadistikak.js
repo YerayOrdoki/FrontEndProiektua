@@ -74,5 +74,8 @@ function hasieratuEstatistikak() {
 
     egoeraElementua.textContent =
         kopurua === 0 ? 'Oraindik ez duzu jokorik gorde.' : '';
+
+
 }
 
+//Oroitu apiarekiko funtzio bat sortu behar dela pertsonalizatuta.

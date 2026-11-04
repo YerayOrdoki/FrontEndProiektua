@@ -1,10 +1,11 @@
-const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma','estatistikak'];
+const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma','estatistikak','ezarpenak'];
 
 const HASIERATZAILEAK = {
   bilatzaile: hasieratuBilatzailea,
   bilduma: hasieratuBilduma,
   kudeatuBilduma: hasieratuKudeatuBilduma,
-  estatistikak: hasieratuEstatistikak
+  estatistikak: hasieratuEstatistikak,
+  ezarpenak: hasieratuEzarpenak
 };
 
 function hasieratuBilatzailea() {
@@ -246,6 +247,26 @@ function hasieratuKudeatuBilduma() {
   kudeatuKargatuEtaErakutsi();
 }
 
+function hasieratuEzarpenak() {
+  const etengailua = document.getElementById('modu-iluna-etengailua');
+  if (!etengailua) return;
+
+  // modu iluna aktibatua dagoen ikusten dugu
+  const moduIlunaGordeta = localStorage.getItem('modu-iluna') === 'aktibatuta';
+  
+  // Etengailua ondo jarri
+  etengailua.checked = moduIlunaGordeta;
+
+  etengailua.addEventListener('change', (event) => {
+    if (event.target.checked) {
+      document.body.classList.add('modu-iluna-css');
+      localStorage.setItem('modu-iluna', 'aktibatuta');
+    } else {
+      document.body.classList.remove('modu-iluna-css');
+      localStorage.setItem('modu-iluna', 'desaktibatuta');
+    }
+  });
+}
 
 async function atalaKargatu(izena) {
   const edukiontzia = document.getElementById(`atala-${izena}`);
@@ -278,6 +299,9 @@ function erakutsiAtala(izena) {
   }
 
   atala.classList.add('aktiboa');
+  if(izena === 'estatistikak') {
+    hasieratuEstatistikak();
+  }
 
   console.log('Clases del contenedor:', atala.className);
   console.log('Contenido:', atala.innerHTML);
@@ -319,5 +343,10 @@ document.getElementById('menu-nagusia').addEventListener('click', (event) => {
   console.log('Botón pulsado:', boton.dataset.seccion);
   erakutsiAtala(boton.dataset.seccion);
 });
+
+
+if (localStorage.getItem('modu-iluna') === 'aktibatuta') {
+  document.body.classList.add('modu-iluna-css');
+}
 
 jaurtiApp();
