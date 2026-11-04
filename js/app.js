@@ -3,7 +3,7 @@ const ATALAK = ['hasiera', 'bilatzaile', 'bilduma', 'kudeatuBilduma'];
 //imanol deja de cantar que cantass fatal porfa
 const HASIERATZAILEAK = {
   bilatzaile: hasieratuBilatzailea,
-  bilduma: () => hasieratuBilduma,
+  bilduma: hasieratuBilduma,
   kudeatuBilduma: () => { }
 };
 
