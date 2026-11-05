@@ -301,6 +301,10 @@ function erakutsiAtala(izena) {
   atala.classList.add('aktiboa');
   if(izena === 'estatistikak') {
     hasieratuEstatistikak();
+  } else if(izena === 'bilduma') {
+    hasieratuBilduma();
+  } else if(izena === 'kudeatuBilduma') {
+    hasieratuKudeatuBilduma();
   }
 
   console.log('Clases del contenedor:', atala.className);
