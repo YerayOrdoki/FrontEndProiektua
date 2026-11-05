@@ -78,4 +78,4 @@ function hasieratuEstatistikak() {
 
 }
 
-//Oroitu apiarekiko funtzio bat sortu behar dela pertsonalizatuta.
+//Oroitu apiarekiko funtzio bat sortu behar dela pertsonalizatuta. aldaketatxo
